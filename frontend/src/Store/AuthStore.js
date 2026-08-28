@@ -12,23 +12,24 @@ export const useAuthStore = create((set) => ({
   message: null,
   fetchingUser: true,
 
+  // SIGNUP
   signup: async (username, email, password) => {
-    set({ isLoading: true, message: null });
+    set({ isLoading: true, message: null, error: null });
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/signup",
-        {
-          username,
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${API_URL}/signup`, {
+        username,
+        email,
+        password,
+      });
 
       set({
         user: response.data.user,
         isLoading: false,
+        error: null,
       });
+
+      return response.data;
     } catch (error) {
       set({
         isLoading: false,
@@ -39,17 +40,15 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // LOGIN
   login: async (username, password) => {
     set({ isLoading: true, message: null, error: null });
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/login",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await axios.post(`${API_URL}/login`, {
+        username,
+        password,
+      });
 
       const { user, message } = response.data;
 
@@ -57,6 +56,7 @@ export const useAuthStore = create((set) => ({
         user,
         message,
         isLoading: false,
+        error: null,
       });
 
       return { user, message };
@@ -70,18 +70,20 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // FETCH USER
   fetchUser: async () => {
     set({ fetchingUser: true, error: null });
 
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/fetch-user"
-      );
+      const response = await axios.get(`${API_URL}/fetch-user`);
 
       set({
         user: response.data.user,
         fetchingUser: false,
+        error: null,
       });
+
+      return response.data;
     } catch (error) {
       set({
         fetchingUser: false,
@@ -92,12 +94,20 @@ export const useAuthStore = create((set) => ({
       throw error;
     }
   },
+
+  // LOGOUT
   logout: async () => {
-    set({ isLoading: true, error: null, message: null });
+    set({
+      isLoading: true,
+      error: null,
+      message: null,
+    });
 
     try {
-      const response = await axios.post(" http://localhost:5000/api/logout");
+      const response = await axios.post(`${API_URL}/logout`);
+
       const { message } = response.data;
+
       set({
         message,
         isLoading: false,
@@ -109,7 +119,8 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.response.data.message || "Error logging out",
+        error:
+          error.response?.data?.message || "Error logging out",
       });
 
       throw error;
