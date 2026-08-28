@@ -4,7 +4,7 @@
 
 ## 🌐 Live Demo
 
-🚀 **Live Website:** [https://cinevo-ctek.onrender.com/]
+🚀 **Live Website:** [https://cinevo-1.onrender.com]
 
 📂 **GitHub Repository:** (https://github.com/jagdaleradhika6-glitch/Cinevo)
 
